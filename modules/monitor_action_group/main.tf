@@ -2,6 +2,7 @@ resource "azurerm_monitor_action_group" "this" {
   name                = var.monitor_action_group.name
   resource_group_name = var.resource_group_name
   short_name          = var.monitor_action_group.short_name
+  enabled             = var.monitor_action_group.enabled
 
   dynamic "arm_role_receiver" {
     for_each = var.monitor_action_group.arm_role_receiver
@@ -109,6 +110,11 @@ resource "azurerm_monitor_action_group" "this" {
       name                    = webhook_receiver.value.name
       service_uri             = webhook_receiver.value.service_uri
       use_common_alert_schema = webhook_receiver.value.use_common_alert_schema
+      aad_auth {
+        object_id      = webhook_receiver.value.aad_auth.object_id
+        identifier_uri = webhook_receiver.value.aad_auth.identifier_uri
+        tenant_id      = webhook_receiver.value.aad_auth.tenant_id
+      }
     }
   }
 

@@ -1,5 +1,5 @@
 variable "monitor_action_groups" {
-  description = "Map of Azure Monitor Action Groups"
+  description = "Map of multiple Azure Monitor Action Groups"
   type = map(object({
     name                = string
     resource_group_name = string
@@ -9,7 +9,7 @@ variable "monitor_action_groups" {
     arm_role_receiver = optional(list(object({
       name                    = string
       role_id                 = string
-      use_common_alert_schema = bool
+      use_common_alert_schema = optional(bool, true)
     })), [])
 
     automation_runbook_receiver = optional(list(object({
@@ -19,7 +19,7 @@ variable "monitor_action_groups" {
       webhook_resource_id     = string
       is_global_runbook       = bool
       service_uri             = string
-      use_common_alert_schema = bool
+      use_common_alert_schema = optional(bool, true)
     })), [])
 
     azure_app_push_receiver = optional(list(object({
@@ -32,13 +32,13 @@ variable "monitor_action_groups" {
       function_app_resource_id = string
       function_name            = string
       http_trigger_url         = string
-      use_common_alert_schema  = bool
+      use_common_alert_schema  = optional(bool, true)
     })), [])
 
     email_receiver = optional(list(object({
       name                    = string
       email_address           = string
-      use_common_alert_schema = optional(bool)
+      use_common_alert_schema = optional(bool, true)
     })), [])
 
     event_hub_receiver = optional(list(object({
@@ -46,7 +46,7 @@ variable "monitor_action_groups" {
       event_hub_namespace     = string
       event_hub_name          = string
       subscription_id         = string
-      use_common_alert_schema = bool
+      use_common_alert_schema = optional(bool, true)
     })), [])
 
     itsm_receiver = optional(list(object({
@@ -61,7 +61,7 @@ variable "monitor_action_groups" {
       name                    = string
       resource_id             = string
       callback_url            = string
-      use_common_alert_schema = bool
+      use_common_alert_schema = optional(bool, true)
     })), [])
 
     sms_receiver = optional(list(object({
@@ -79,7 +79,12 @@ variable "monitor_action_groups" {
     webhook_receiver = optional(list(object({
       name                    = string
       service_uri             = string
-      use_common_alert_schema = bool
+      use_common_alert_schema = optional(bool, true)
+      aad_auth = optional(object({
+        object_id      = string
+        identifier_uri = optional(string)
+        tenant_id      = optional(string)
+      }))
     })), [])
 
   }))
