@@ -1,6 +1,6 @@
 variable "monitor_action_groups" {
-  description = "Map of multiple Azure Monitor Action Groups"
-  type = map(object({
+  description = "List of multiple Azure Monitor Action Groups"
+  type = list(object({
     name                = string
     resource_group_name = string
     short_name          = string
