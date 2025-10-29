@@ -1,11 +1,11 @@
 resource "azurerm_monitor_action_group" "this" {
-  name                = var.monitor_action_group.name
+  name                = var.monitor_action_group_name
   resource_group_name = var.resource_group_name
-  short_name          = var.monitor_action_group.short_name
-  enabled             = var.monitor_action_group.enabled
+  short_name          = var.monitor_action_group_short_name
+  enabled             = var.monitor_action_group_enabled
 
   dynamic "arm_role_receiver" {
-    for_each = var.monitor_action_group.arm_role_receiver
+    for_each = try(var.monitor_action_group_actions.arm_role_receiver, [])
     content {
       name                    = arm_role_receiver.value.name
       role_id                 = arm_role_receiver.value.role_id
@@ -14,7 +14,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "automation_runbook_receiver" {
-    for_each = var.monitor_action_group.automation_runbook_receiver
+    for_each = try(var.monitor_action_group_actions.automation_runbook_receiver, [])
     content {
       name                    = automation_runbook_receiver.value.name
       automation_account_id   = automation_runbook_receiver.value.automation_account_id
@@ -27,7 +27,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "azure_app_push_receiver" {
-    for_each = var.monitor_action_group.azure_app_push_receiver
+    for_each = try(var.monitor_action_group_actions.azure_app_push_receiver, [])
     content {
       name          = azure_app_push_receiver.value.name
       email_address = azure_app_push_receiver.value.email_address
@@ -35,7 +35,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "azure_function_receiver" {
-    for_each = var.monitor_action_group.azure_function_receiver
+    for_each = try(var.monitor_action_group_actions.azure_function_receiver, [])
     content {
       name                     = azure_function_receiver.value.name
       function_app_resource_id = azure_function_receiver.value.function_app_resource_id
@@ -46,16 +46,16 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "email_receiver" {
-    for_each = var.monitor_action_group.email_receiver
+    for_each = try(var.monitor_action_group_actions.email_receiver, [])
     content {
       name                    = email_receiver.value.name
       email_address           = email_receiver.value.email_address
-      use_common_alert_schema = lookup(email_receiver.value, "use_common_alert_schema", false)
+      use_common_alert_schema = email_receiver.value.use_common_alert_schema
     }
   }
 
   dynamic "event_hub_receiver" {
-    for_each = var.monitor_action_group.event_hub_receiver
+    for_each = try(var.monitor_action_group_actions.event_hub_receiver, [])
     content {
       name                    = event_hub_receiver.value.name
       event_hub_namespace     = event_hub_receiver.value.event_hub_namespace
@@ -66,7 +66,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "itsm_receiver" {
-    for_each = var.monitor_action_group.itsm_receiver
+    for_each = try(var.monitor_action_group_actions.itsm_receiver, [])
     content {
       name                 = itsm_receiver.value.name
       workspace_id         = itsm_receiver.value.workspace_id
@@ -77,7 +77,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "logic_app_receiver" {
-    for_each = var.monitor_action_group.logic_app_receiver
+    for_each = try(var.monitor_action_group_actions.logic_app_receiver, [])
     content {
       name                    = logic_app_receiver.value.name
       resource_id             = logic_app_receiver.value.resource_id
@@ -87,7 +87,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "sms_receiver" {
-    for_each = var.monitor_action_group.sms_receiver
+    for_each = try(var.monitor_action_group_actions.sms_receiver, [])
     content {
       name         = sms_receiver.value.name
       country_code = sms_receiver.value.country_code
@@ -96,7 +96,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "voice_receiver" {
-    for_each = var.monitor_action_group.voice_receiver
+    for_each = try(var.monitor_action_group_actions.voice_receiver, [])
     content {
       name         = voice_receiver.value.name
       country_code = voice_receiver.value.country_code
@@ -105,7 +105,7 @@ resource "azurerm_monitor_action_group" "this" {
   }
 
   dynamic "webhook_receiver" {
-    for_each = var.monitor_action_group.webhook_receiver
+    for_each = try(var.monitor_action_group_actions.webhook_receiver, [])
     content {
       name                    = webhook_receiver.value.name
       service_uri             = webhook_receiver.value.service_uri
@@ -118,5 +118,5 @@ resource "azurerm_monitor_action_group" "this" {
     }
   }
 
-  tags = var.all_tags
+  tags = local.all_tags
 }

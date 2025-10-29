@@ -3,14 +3,25 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "monitor_action_group" {
-  description = "Object of a singular Azure Monitor Action Group"
-  type = object({
-    name                = string
-    resource_group_name = string
-    short_name          = string
-    enabled             = optional(bool, true)
+variable "monitor_action_group_name" {
+  description = "Name"
+  type        = string
 
+}
+variable "monitor_action_group_short_name" {
+  description = "Name"
+  type        = string
+
+}
+variable "monitor_action_group_enabled" {
+  description = "Name"
+  type        = bool
+  default     = "true"
+}
+
+variable "monitor_action_group_actions" {
+  description = "Actions for a single Az Monitor Action Group"
+  type = object({
     arm_role_receiver = optional(list(object({
       name                    = string
       role_id                 = string
@@ -91,12 +102,23 @@ variable "monitor_action_group" {
         identifier_uri = optional(string)
       }))
     })), [])
-
   })
 }
 
-variable "all_tags" {
-  description = "Tags for all Action Groups"
+variable "common_tags" {
+  description = "Common tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "additional_tags" {
+  description = "Additional tags to apply to all resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "service_tags" {
+  description = "Service-specific tags to apply to this resource"
   type        = map(string)
   default     = {}
 }
